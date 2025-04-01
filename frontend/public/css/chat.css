@@ -1,0 +1,399 @@
+body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow: hidden;
+            /* Prevent body scrolling */
+        }
+
+        /* User Controls Styling */
+        .user-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 60px;
+            box-sizing: border-box;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        #username-display {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Chat Container */
+        .chat-container {
+            display: flex;
+            height: calc(100vh - 60px);
+            /* Account for header height */
+            position: relative;
+        }
+
+        /* Fixed User List */
+        .user-list {
+            width: 200px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .user-list h3 {
+            margin: 0;
+            padding: 15px 10px;
+            border-bottom: 1px solid #ddd;
+            font-size: 16px;
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+        }
+
+        .users-container {
+            flex: 1;
+            overflow-y: auto;
+            /* Make only the users list scrollable */
+            padding: 0 10px;
+        }
+
+        .user-list ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .user-list li {
+            padding: 8px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+            transition: all 0.2s ease;
+        }
+
+        .user-list li:hover {
+            background-color: #e9ecef;
+        }
+
+        .user-list li.selected {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .user-list li.just-selected {
+            transform: scale(1.05);
+        }
+
+        .user-list li.deselected {
+            animation: pulse 0.3s ease;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Chat Main Area */
+        .chat-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        #messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 10px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        #messages>li {
+            padding: 0.8rem 1rem;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #messages>li:nth-child(odd) {
+            background: #f8f9fa;
+        }
+
+        .own-message {
+            background-color: #dcf8c6 !important;
+            text-align: right;
+            margin-left: 25% !important;
+        }
+
+        /* Form Styling */
+        #form {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 10px;
+            display: flex;
+            box-sizing: border-box;
+            border-top: 1px solid #ddd;
+        }
+
+        #input {
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            flex-grow: 1;
+            border-radius: 20px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        #input:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        #form>button {
+            background: #007bff;
+            border: none;
+            padding: 0 20px;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        #toggle-btn {
+            background: #6c757d !important;
+            margin-left: 5px;
+        }
+
+        /* Message Styling */
+        .timestamp {
+            color: #888;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .private-message {
+            background-color: #f0e5ff !important;
+        }
+
+        .private-badge {
+            background-color: #6c757d;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            margin-left: 8px;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-style: italic;
+            background-color: #f8d7da !important;
+        }
+
+        .message-header {
+            margin-bottom: 5px;
+        }
+
+        .message-body {
+            word-wrap: break-word;
+        }
+
+        /* Media Queries for Responsive Design */
+
+        /* Tablets (portrait) */
+        @media (max-width: 768px) {
+            .user-list {
+                width: 160px;
+            }
+
+            .user-info {
+                gap: 5px;
+            }
+
+            #username-display {
+                font-size: 14px;
+                max-width: 120px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+
+        /* Mobile Phones */
+        @media (max-width: 576px) {
+
+            /* Header modifications */
+            .users-container {
+                position: relative;
+            }
+
+            .users-container::after {
+                content: '';
+                position: absolute;
+                top: 0;
+                right: 0;
+                height: 100%;
+                width: 20px;
+                background: linear-gradient(to right, transparent, #f8f9fa);
+                pointer-events: none;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            .users-container.has-overflow::after {
+                opacity: 1;
+            }
+
+            .user-controls {
+                padding: 8px 10px;
+            }
+
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            #username-display {
+                max-width: 80px;
+            }
+
+            .logout-btn {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            /* Change layout for mobile - stack users above chat */
+            .chat-container {
+                flex-direction: column;
+                height: calc(100vh - 60px); /* Account for header height */
+                position: relative;
+            }
+
+            /* User list becomes horizontal on top and always visible */
+            .user-list {
+                width: 100%;
+                height: auto;
+                max-height: 70px;
+                border-right: none;
+                border-bottom: 1px solid #ddd;
+                overflow: hidden;
+                /* Change from sticky + margin to fixed positioning */
+                position: fixed;
+                top: 65px; /* Exact height of the user-controls, not percentage */
+                left: 0;
+                right: 0;
+                z-index: 50;
+                margin-top: 0; /* Remove percentage margin */
+                background-color: #f8f9fa;
+            }
+
+            .user-list h3 {
+                padding: 5px 10px;
+                font-size: 12px;
+                margin: 0;
+            }
+
+            .users-container {
+                overflow-x: auto;
+                white-space: nowrap;
+                display: flex;
+                padding: 5px 5px 5px 5px;
+                height: 45px;
+                /* Fixed height for users container */
+            }
+
+            .user-list ul {
+                display: flex;
+                flex-direction: row;
+                padding-bottom: 0;
+                margin: 0;
+                height: 100%;
+                align-items: center;
+            }
+
+            .user-list li {
+                display: inline-block;
+                margin: 0 5px;
+                padding: 5px 10px;
+                background-color: #e9ecef;
+                border-radius: 15px;
+                white-space: nowrap;
+                font-size: 13px;
+            }
+
+            .user-list li.selected {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .user-list li.selected::after {
+                content: "✓";
+                margin-left: 5px;
+            }
+
+            /* Main chat area */
+            .chat-main {
+                margin-top: 140px;
+                flex: 1;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+            }
+
+            #messages {
+                padding: 8px;
+                overflow-y: auto;
+                flex: 1;
+            }
+
+            #messages>li {
+                padding: 0.6rem 0.8rem;
+                margin-bottom: 6px;
+                font-size: 14px;
+            }
+
+            /* Remove the toggle button - we don't need it anymore */
+            .mobile-toggle-users {
+                display: none !important;
+            }
+        }

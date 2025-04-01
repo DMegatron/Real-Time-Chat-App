@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt')
  
 const Messages = require('./models/messages.model')
 const User = require('./models/users.model')
+const { isPromise } = require('node:util/types')
 
 mongoose.connect("mongodb://127.0.0.1:27017/chatApp")
 .then(() => {
@@ -94,10 +95,13 @@ app.post('/login', async(req, res) => {
 
 app.post('/register', async(req, res) => {
     try {
-        const { name, username, password } = req.body
+        const { name, username, password, confirmPassword } = req.body
         const existingUser = await User.findOne({ username })
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists!'})
+        }
+        if (password != confirmPassword) {
+            return res.status(400).json({ message: 'Passwords do not match!'})
         }
         const newUser = new User({ name, username, password })
         await newUser.save()
@@ -122,13 +126,28 @@ app.get('/logout', (req,res) => {
     res.redirect('/login')
 })
 
+const connectedUsers = new Map();
+
 io.on('connection', async (socket) => {
     console.log(`User ${ socket.id } connected.`)
 
     //Get username from session
     const username = socket.handshake.query.username
-    socket.username = username
-    
+    const name = socket.handshake.query.name
+
+    if (username) {
+        socket.username = username
+        socket.name = name
+    }
+
+    connectedUsers.set(username, {
+        name: name,
+        username: username,
+        socketId: socket.id
+    })
+
+    io.emit('user list', Array.from(connectedUsers.values()))
+
     //Send previous messages to new users
     try {
         const messages = await Messages.find().sort({ timestamp: 1})
@@ -137,6 +156,8 @@ io.on('connection', async (socket) => {
                 id: msg._id.toString(),
                 username: msg.username,
                 name: msg.name,
+                recipient: msg.recipient,
+                isPrivate: msg.isPrivate,
                 timestamp: msg.timestamp,
                 text: msg.text
             })))
@@ -168,13 +189,64 @@ io.on('connection', async (socket) => {
         }
     })
 
+    //Private message sending
+    socket.on('private message', async (data) => {
+        try {
+            const { to, text } = data
+            const from = socket.username
+            const fromName = socket.name
+            //Get receivers socket id
+            const userData = connectedUsers.get(to)
+            const recipientSocketId = userData ? userData.socketId : null;
+
+            // if (!recipientSocketId ) {
+                
+            // }
+
+            //Save message to database
+            const savedMessage = await Messages.create({
+                text,
+                username: from,
+                name: fromName,
+                recipient: to,
+                isPrivate: true
+            })
+
+            //Message data to send
+            const messageData = {
+                id: savedMessage._id.toString(),
+                text,
+                username: from,
+                name: fromName,
+                recipient: to,
+                timestamp: savedMessage.timestamp,
+                isPrivate: true
+            }
+            io.to(recipientSocketId).emit('private message', messageData)
+
+            socket.emit('private message', messageData)
+        } catch (error) {
+            console.log('Error sending private message: ', error)
+            socket.emit('private message error', {
+                message: 'Failed to send messasge!'
+            })
+        }
+    })
+
     //On disconnect
     socket.on('disconnect', () => {
         console.log(`User ${socket.id} disconnected!`)
+
+        connectedUsers.delete(socket.username)
+
+        if (socket.username) {
+            io.emit('user list', Array.from(connectedUsers.keys()))
+        }
+
     })
 
 })
 
 server.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is running on: http://localhost:${PORT}`)
+    console.log(`Server is running on: http://localhost:${PORT}/login`)
 }) 

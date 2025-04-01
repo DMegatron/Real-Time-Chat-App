@@ -249,3 +249,206 @@ body {
     font-size: 0.85rem;
     opacity: 0.6;
 }
+/* Add these to your login.css file */
+
+/* Tablets (landscape) */
+@media (max-width: 992px) {
+    .container {
+        width: 90%;
+        max-width: 800px;
+    }
+    
+    .toggle-panel h2 {
+        font-size: 24px;
+    }
+    
+    .toggle-panel p {
+        font-size: 13px;
+    }
+    
+    .toggle-panel img {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+/* Tablets (portrait) */
+@media (max-width: 768px) {
+    .container {
+        min-height: 500px;
+    }
+    
+    .mb-2 {
+        width: 100%;
+        max-width: 350px;
+    }
+    
+    .toggle-panel h2 {
+        font-size: 20px;
+    }
+    
+    .toggle-panel img {
+        width: 150px;
+        height: 150px;
+        margin-top: -30px;
+        margin-bottom: 20px;
+    }
+    
+    .container button {
+        padding: 10px 30px;
+    }
+}
+
+/* Mobile Devices */
+/* Mobile Devices */
+@media (max-width: 576px) {
+    body {
+        padding: 20px;
+        height: auto;
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start; /* Changed from center to flex-start */
+        justify-content: center;
+    }
+    
+    .container {
+        width: 100%;
+        min-height: auto;
+        height: auto;
+        border-radius: 20px;
+        margin: 20px 0;
+        overflow: visible; /* Changed from hidden to visible */
+    }
+    
+    /* Form container adjustments */
+    .form-container {
+        position: relative;
+        width: 100%;
+        padding: 30px 20px !important; /* Added padding */
+        height: auto;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+    
+    /* Make sure forms are visible */
+    .sign-in, .sign-up {
+        display: flex !important;
+        position: relative;
+        left: 0;
+    }
+    
+    /* Hide inactive form */
+    .container:not(.active) .sign-up,
+    .container.active .sign-in {
+        display: none !important;
+    }
+    
+    /* Input field visibility fixes */
+    .container input {
+        background-color: #eee;
+        border: none;
+        margin: 8px 0;
+        padding: 12px 15px !important; /* Increased padding */
+        font-size: 14px;
+        border-radius: 8px;
+        width: 100%;
+        outline: none;
+        display: block; /* Ensure inputs are visible */
+        opacity: 1 !important;
+    }
+    
+    /* Form group adjustments */
+    .form-group-compact {
+        margin-bottom: 1rem !important;
+        width: 100%;
+    }
+    
+    .form-group-compact label {
+        display: block;
+        margin-bottom: 0.3rem;
+        font-size: 0.9rem;
+        color: #333;
+    }
+    
+    /* Button adjustments */
+    .container button {
+        width: 100%;
+        padding: 12px;
+        margin: 15px 0 0;
+    }
+    
+    /* Error message styling */
+    .text-danger {
+        font-size: 13px;
+        margin: 5px 0 10px;
+        display: block;
+        width: 100%;
+    }
+    
+    /* Mobile switch links */
+    .mobile-switch {
+        display: block !important;
+        margin: 20px 0 10px;
+        text-align: center;
+    }
+    
+    .mobile-switch a {
+        color: #02052c;
+        text-decoration: underline;
+        font-weight: 600;
+    }
+    
+    /* Hide toggle container on mobile */
+    .toggle-container {
+        display: none;
+    }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 375px) {
+    .container {
+        margin: 10px 0;
+    }
+    
+    .form-container {
+        padding: 25px 15px !important;
+    }
+    
+    .container input {
+        padding: 10px 12px !important;
+    }
+    
+    .container button {
+        padding: 10px;
+    }
+}
+
+/* Landscape orientation */
+@media (max-height: 500px) and (orientation: landscape) {
+    body {
+        padding: 10px;
+    }
+    
+    .container {
+        margin: 10px 0;
+        max-height: 95vh;
+        overflow-y: auto;
+    }
+    
+    .form-container {
+        padding: 15px !important;
+    }
+    
+    .form-group-compact {
+        margin-bottom: 0.6rem !important;
+    }
+    
+    .container input {
+        padding: 8px 12px !important;
+    }
+    
+    .container button {
+        padding: 8px;
+        margin-top: 10px;
+    }
+}

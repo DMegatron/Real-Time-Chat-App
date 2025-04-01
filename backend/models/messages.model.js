@@ -14,6 +14,14 @@ const Messages = new mongoose.Schema({
         required: false,
         default: "Anonymous"
     },
+    recipient: {
+        type: String,
+        default: null
+    },
+    isPrivate: {
+        type: Boolean,
+        default: false
+    },
     timestamp: {
         type: Date,
         default: Date.now
