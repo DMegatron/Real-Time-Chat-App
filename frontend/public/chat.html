@@ -3,6 +3,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Chat App</title>
     <style>
         body {
@@ -70,10 +71,72 @@
             font-size: 0.8em;
             margin-left: 10px;
         }
+
+        /* User Controls Styling */
+        .user-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        #username-display {
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .logout-btn:hover {
+            background-color: #c82333;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
     </style>
 </head>
 
 <body>
+    <div class="user-controls">
+        <div class="user-info">
+            <img src="https://ui-avatars.com/api/?name=USERNAME&background=random" alt="Avatar" class="user-avatar"
+                id="user-avatar">
+            <span id="username-display"></span>
+        </div>
+        <a href="/logout" class="logout-btn">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
     <ul id="messages"></ul>
     <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
@@ -81,7 +144,6 @@
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
 
         const form = document.getElementById('form')
         const input = document.getElementById('input')
@@ -90,11 +152,19 @@
         const receivedMessageIDs = new Set()
 
         //Add username input
-        const username = localStorage.getItem('username') || ''
-        if (!username || username === "") {
-            const newUsername = prompt('Enter username') || "Anonymous"
-            localStorage.setItem('username', newUsername)
+        const username = sessionStorage.getItem('username')
+        const name = sessionStorage.getItem('name')
+        if (!username) {
+            window.location.href = '/login'
         }
+
+        document.getElementById('username-display').textContent = `Logged in as: ${name}`
+
+        const socket = io({
+            query: {
+                username: username
+            }
+        });
 
         //Load previous messages
         socket.on('load previous messages', (previousMessages) => {
@@ -123,8 +193,9 @@
             if (input.value) {
                 socket.emit('chat message', {
                     text: input.value,
-                    username: localStorage.getItem('username') || "Anonymous",
-                    userId: socket.id,
+                    username: username,
+                    name: name
+                    // userId: socket.id,
                     // room: 'general'
                 })
                 input.value = ''
@@ -145,12 +216,13 @@
 
         //Add message to DOM
         function addMessageToDOM(message) {
+            console.log(message)
             const item = document.createElement('li')
-            const isCurrentUser = message.userId === socket.id
+            const isCurrentUser = message.username === username
 
             //Create message with username
             item.innerHTML = `
-            <strong>${message.username || 'Anonymous'}:</strong>
+            <strong>${message.name}:</strong>
             ${message.text}
             <small class="timestamp">${new Date(message.timestamp).toLocaleTimeString()}</small>
             `

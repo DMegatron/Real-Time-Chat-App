@@ -5,21 +5,15 @@ const Messages = new mongoose.Schema({
         type: String,
         required: true
     },
-    userId: {
+    name: {
         type: String,
-        required: false,
-        default: "anonymous"
+        required: true
     },
     username: {
         type: String,
         required: false,
         default: "Anonymous"
     },
-    // room: {
-    //     type: String,
-    //     require: false,
-    //     default: "general"
-    // },
     timestamp: {
         type: Date,
         default: Date.now
